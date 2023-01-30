@@ -1,0 +1,52 @@
+spring:
+  session:
+    jdbc:
+      initialize-schema: always
+      table-name: SPRING_SESSION
+      schema:
+        - classpath:session_tables.sql
+  datasource:
+    url: jdbc:postgresql://localhost:5432/instagram
+    username: postgres
+    password: turatbekov2000itfball
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    generate-ddl: true
+    database: postgresql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  security:
+    oauth2:
+      resource:
+        preferTokenInfo: true
+      client:
+        clientAuthenticationScheme: form
+        registration:
+          google:
+            clientId: 362934420937-9idtptlgvi1qnfhj6m4ugsndl77lolr8.apps.googleusercontent.com
+            clientSecret: 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
+            scope:
+              - email
+              - profile
+          github:
+            clientId: 2372ee7edbccf2fd49e0
+            clientSecret: 69b5883fce3b5456bfd6b49696281522c6353c4b
+            scope:
+              - email
+              - user
+app:
+  auth:
+    tokenSecret: 04ca023b39512e46d0c2cf4b48d5aac61d34302994c87ed4eff225dcf3b0a218739f3897051a057f9b846a69ea2927a587044164b7bae5e1306219d50b588cb1
+    tokenExpirationMsec: 864000000
+  cors:
+    allowedOrigins: http://localhost:3000
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect

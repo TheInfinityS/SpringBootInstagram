@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/instagram
     username: postgres
-    password: turatbekov2000itfball
+    password: ${dbSecret}
     driver-class-name: org.postgresql.Driver
   jpa:
     generate-ddl: true

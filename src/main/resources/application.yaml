@@ -31,6 +31,7 @@ spring:
             clientId: 362934420937-9idtptlgvi1qnfhj6m4ugsndl77lolr8.apps.googleusercontent.com
             clientSecret: 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
             scope:
+              - openid
               - email
               - profile
           github:

@@ -29,14 +29,14 @@ spring:
         registration:
           google:
             clientId: 362934420937-9idtptlgvi1qnfhj6m4ugsndl77lolr8.apps.googleusercontent.com
-            clientSecret: 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
+            clientSecret: ${googleClientSecret}
             scope:
               - openid
               - email
               - profile
           github:
             clientId: 2372ee7edbccf2fd49e0
-            clientSecret: 69b5883fce3b5456bfd6b49696281522c6353c4b
+            clientSecret: ${githubClientSecret}
             scope:
               - email
               - user

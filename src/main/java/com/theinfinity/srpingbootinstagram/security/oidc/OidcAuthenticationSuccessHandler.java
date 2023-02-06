@@ -23,26 +23,22 @@ public class OidcAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
-
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
-
-        clearAuthenticationAttributes(request, response);
+        clearAuthenticationAttributes(request,response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-
         String token = jwtService.generateToken(authentication);
-
         return UriComponentsBuilder.fromUriString(request.getRequestURI())
                 .queryParam("token", token)
                 .build().toUriString();
     }
-
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
     }
+
 }

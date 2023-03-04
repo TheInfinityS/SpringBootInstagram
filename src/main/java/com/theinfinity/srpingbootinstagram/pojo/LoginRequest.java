@@ -1,2 +1,13 @@
-package com.theinfinity.srpingbootinstagram.pojo;public class LoginRequest {
+package com.theinfinity.srpingbootinstagram.pojo;
+
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class LoginRequest {
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String password;
 }

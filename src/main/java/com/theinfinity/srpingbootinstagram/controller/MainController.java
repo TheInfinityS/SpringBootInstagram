@@ -45,9 +45,11 @@ public class MainController {
         if(userPrincipal!=null){
             User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
             data.put("profile",user);
-            data.put("posts",postRepository.findAll());
+            String posts = writer.writeValueAsString(postRepository.findAll());
+            model.addAttribute("posts", posts);
         }
         else {
+            model.addAttribute("messages", "[]");
         }
         model.addAttribute("frontendData",data);
         model.addAttribute("isDevMode","dev".equals(profile));

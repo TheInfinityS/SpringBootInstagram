@@ -1,25 +1,24 @@
 <template>
-    <div>
-        <input type="text" placeholder="Write something" v-model="text" />
-        <input type="button" value="Save" @click="save" />
-    </div>
+    <v-row>
+        <v-text-field
+            label="New post"
+            placeholder="Write something"
+            v-model="text"
+            @keyup.enter="save"/>
+        <v-btn @click="save">
+            Save
+        </v-btn>
+    </v-row>
 </template>
 
 <script>
-    function getIndex(list, id) {
-        for (var i = 0; i < list.length; i++ ) {
-            if (list[i].id === id) {
-                return i
-            }
-        }
-        return -1
-    }
+    import {mapActions} from 'vuex'
     export default {
-        props: ['posts', 'postAttr'],
+        props: ['postAttr'],
         data() {
             return {
-                text: '',
-                id: ''
+                text: null,
+                id: null
             }
         },
         watch: {
@@ -29,37 +28,19 @@
             }
         },
         methods: {
+            ...mapActions(['addPostAction','updatePostAction']),
             save() {
-                const post = { text: this.text }
-                if (this.id) {
-                post.id=this.id
-                console.log(post)
-                    this.$fetch('/post/'+this.id, {
-                                     method: 'PUT',
-                                     headers: {
-                                       'Content-Type': 'application/json;charset=utf-8'
-                                     },
-                                     body: JSON.stringify(post)}).then(result =>
-                        result.json().then(data => {
-                            const index = getIndex(this.posts, data.id)
-                            this.posts.splice(index, 1, data)
-                            this.text = ''
-                            this.id = ''
-                        })
-                    )
-                } else {
-                    this.$fetch('/post', {
-                                     method: 'POST',
-                                     headers: {
-                                         'Content-Type': 'application/json;charset=utf-8'
-                                     },
-                                     body: JSON.stringify(post)}).then(result =>
-                        result.json().then(data => {
-                            this.posts.push(data)
-                            this.text = ''
-                        })
-                    )
+                 const post = {
+                    id: this.id,
+                    text: this.text
                 }
+                if (this.id) {
+                    this.updatePostAction(post)
+                } else {
+                    this.addPostAction(post)
+                }
+                this.text = null
+                this.id = null
             }
         }
     }

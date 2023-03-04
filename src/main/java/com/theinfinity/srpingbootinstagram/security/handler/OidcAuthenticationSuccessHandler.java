@@ -1,6 +1,7 @@
-package com.theinfinity.srpingbootinstagram.security.oidc;
+package com.theinfinity.srpingbootinstagram.security.handler;
 
 import com.theinfinity.srpingbootinstagram.config.AppProperties;
+import com.theinfinity.srpingbootinstagram.exception.BadRequestException;
 import com.theinfinity.srpingbootinstagram.security.cookie.CookieUtils;
 import com.theinfinity.srpingbootinstagram.security.cookie.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.theinfinity.srpingbootinstagram.security.jwt.JwtService;

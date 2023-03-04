@@ -3,13 +3,13 @@ package com.theinfinity.srpingbootinstagram.service;
 import com.theinfinity.srpingbootinstagram.entity.AuthProvider;
 import com.theinfinity.srpingbootinstagram.entity.Role;
 import com.theinfinity.srpingbootinstagram.entity.User;
+import com.theinfinity.srpingbootinstagram.exception.OidcAuthenticationProcessingException;
 import com.theinfinity.srpingbootinstagram.repository.UserRepository;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
 import com.theinfinity.srpingbootinstagram.security.oidc.OidcUserInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -46,7 +46,7 @@ public class CustomOidcUserService extends OidcUserService {
     private OidcUser processOAuth2User(OidcUserRequest userRequest, OidcUser oidcUser) {
         OidcUserInfo oidcUserInfo = OidcUserInfoFactory.getOidcUserInfo(userRequest.getClientRegistration().getRegistrationId(), oidcUser.getAttributes());
         if(StringUtils.isEmpty(oidcUserInfo.getPreferredUsername())) {
-            throw new UsernameNotFoundException("Username not found from OAuth2 provider");
+            throw new OidcAuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
         Optional<User> userOptional = userRepository.findByUsername(oidcUserInfo.getPreferredUsername());
@@ -54,7 +54,9 @@ public class CustomOidcUserService extends OidcUserService {
         if(userOptional.isPresent()) {
             user = userOptional.get();
             if(!user.getProvider().equals(AuthProvider.valueOf(userRequest.getClientRegistration().getRegistrationId()))) {
-                throw new UsernameNotFoundException("sub");
+                throw new OidcAuthenticationProcessingException("Looks like you're signed up with " +
+                        user.getProvider() + " account. Please use your " + user.getProvider() +
+                        " account to login.");
             }
             user = updateExistingUser(user, oidcUserInfo);
         } else {

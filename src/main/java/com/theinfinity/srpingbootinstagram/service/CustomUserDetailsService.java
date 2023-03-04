@@ -1,6 +1,7 @@
 package com.theinfinity.srpingbootinstagram.service;
 
 import com.theinfinity.srpingbootinstagram.entity.User;
+import com.theinfinity.srpingbootinstagram.exception.ResourceNotFoundException;
 import com.theinfinity.srpingbootinstagram.repository.UserRepository;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new UsernameNotFoundException("id"));
+                () -> new ResourceNotFoundException("User", "id", id));
 
         return UserPrincipal.create(user);
     }

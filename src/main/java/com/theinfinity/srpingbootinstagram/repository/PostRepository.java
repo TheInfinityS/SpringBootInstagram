@@ -9,5 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
-
+    @EntityGraph(attributePaths = { "comments" })
+    List<Post> findAll();
 }

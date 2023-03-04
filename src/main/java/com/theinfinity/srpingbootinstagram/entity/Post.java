@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,5 +46,17 @@ public class Post {
     private List<Comment> comments;
 
     @JsonView(Views.IdName.class)
+//    @NotNull
+    @Column(updatable = false)
     private String imageUrl;
+
+    @JsonView(Views.FullPost.class)
+    private Integer likes;
+
+    public void setComments(List<Comment> comments) {
+        this.comments.clear();
+        if (comments != null) {
+            this.comments.addAll(comments);
+        }
+    }
 }

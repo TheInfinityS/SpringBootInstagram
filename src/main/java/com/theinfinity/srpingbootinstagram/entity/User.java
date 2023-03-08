@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.Set;
 })
 @Data
 @EqualsAndHashCode(of = { "id" })
+@ToString(of = {"id","username"})
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,31 +67,19 @@ public class User implements Serializable {
 
     private String providerId;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_followings",
-            joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id")
-    )
-    @JsonView(Views.FullProfile.class)
-    @JsonIdentityReference
-    @JsonIdentityInfo(
-            property = "id",
-            generator = ObjectIdGenerators.PropertyGenerator.class
-    )
-    private Set<User> followings=new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_followings",
-            joinColumns = @JoinColumn(name = "channel_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id")
-    )
     @JsonView(Views.FullProfile.class)
-    @JsonIdentityReference
-    @JsonIdentityInfo(
-            property = "id",
-            generator = ObjectIdGenerators.PropertyGenerator.class
+    @OneToMany(
+            mappedBy = "follower",
+            orphanRemoval = true
     )
-    private Set<User> followers=new HashSet<>();
+    private Set<UserFollowing> followings=new HashSet<>();
+
+    @JsonView(Views.FullProfile.class)
+    @OneToMany(
+            mappedBy = "channel",
+            orphanRemoval = true,
+            cascade =CascadeType.ALL
+    )
+    private Set<UserFollowing> followers=new HashSet<>();
 }

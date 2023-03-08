@@ -50,7 +50,7 @@
             },
             isIFollower(){
                 return this.profile.followers && this.profile.followers.find(following => {
-                    return following.id === this.$store.state.profile.id
+                    return following.follower === this.$store.state.profile.id
                 })
             }
         },

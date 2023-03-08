@@ -61,7 +61,8 @@ public class MainController {
             Sort sort=Sort.by(Sort.Direction.DESC,"id");
             PageRequest pageRequest = PageRequest.of(0, POST_PER_PAGE, sort);
             System.out.println(pageRequest.getPageNumber()+" : "+pageRequest.getPageSize());
-            PostPage postPage = postService.findAll(pageRequest);
+            PostPage postPage = postService.findForUser(pageRequest,user);
+
             String posts = messageWriter.writeValueAsString(postPage.getPosts());
 
             model.addAttribute("posts", posts);

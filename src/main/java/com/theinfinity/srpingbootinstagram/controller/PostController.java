@@ -3,8 +3,10 @@ package com.theinfinity.srpingbootinstagram.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.theinfinity.srpingbootinstagram.dto.PostPage;
 import com.theinfinity.srpingbootinstagram.entity.Post;
+import com.theinfinity.srpingbootinstagram.entity.User;
 import com.theinfinity.srpingbootinstagram.entity.Views;
 import com.theinfinity.srpingbootinstagram.repository.PostRepository;
+import com.theinfinity.srpingbootinstagram.repository.UserRepository;
 import com.theinfinity.srpingbootinstagram.security.CurrentUser;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
 import com.theinfinity.srpingbootinstagram.service.PostService;
@@ -22,18 +24,22 @@ import java.io.IOException;
 public class PostController {
     public static final int  POST_PER_PAGE=3;
     private final PostService postService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PostController(PostRepository postRepository, PostService postService, WsSender wsSender) {
+    public PostController(PostRepository postRepository, PostService postService, WsSender wsSender, UserRepository userRepository) {
         this.postService = postService;
+        this.userRepository = userRepository;
     }
 
 
     @GetMapping
     @JsonView(Views.FullPost.class)
-    public PostPage list(@PageableDefault(size = POST_PER_PAGE,sort = {"id"},direction = Sort.Direction.DESC) Pageable pageable)
+    public PostPage list(@PageableDefault(size = POST_PER_PAGE,sort = {"id"},direction = Sort.Direction.DESC) Pageable pageable,
+                         @CurrentUser UserPrincipal userPrincipal)
     {
-        return postService.findAll(pageable);
+        User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
+        return postService.findForUser(pageable, user);
     }
 
     @GetMapping("{id}")

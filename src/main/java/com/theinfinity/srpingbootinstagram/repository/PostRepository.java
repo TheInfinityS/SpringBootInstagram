@@ -1,6 +1,7 @@
 package com.theinfinity.srpingbootinstagram.repository;
 
 import com.theinfinity.srpingbootinstagram.entity.Post;
+import com.theinfinity.srpingbootinstagram.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long> {
     @EntityGraph(attributePaths = { "comments" })
-    Page<Post> findAll(Pageable pageable);
+    Page<Post> findByAuthorIn(List<User> users, Pageable pageable);
 }

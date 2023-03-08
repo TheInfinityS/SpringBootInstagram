@@ -4,8 +4,11 @@ import com.theinfinity.srpingbootinstagram.dto.EventType;
 import com.theinfinity.srpingbootinstagram.dto.ObjectType;
 import com.theinfinity.srpingbootinstagram.dto.PostPage;
 import com.theinfinity.srpingbootinstagram.entity.Post;
+import com.theinfinity.srpingbootinstagram.entity.User;
+import com.theinfinity.srpingbootinstagram.entity.UserFollowing;
 import com.theinfinity.srpingbootinstagram.entity.Views;
 import com.theinfinity.srpingbootinstagram.repository.PostRepository;
+import com.theinfinity.srpingbootinstagram.repository.UserFollowingRepository;
 import com.theinfinity.srpingbootinstagram.repository.UserRepository;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
 import com.theinfinity.srpingbootinstagram.util.WsSender;
@@ -20,13 +23,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final UserFollowingRepository userFollowingRepository;
 
     private final BiConsumer<EventType,Post> wsSender;
 
@@ -34,14 +40,17 @@ public class PostService {
     private String uploadPath;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, WsSender wsSender) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, UserFollowingRepository userFollowingRepository, WsSender wsSender) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.userFollowingRepository = userFollowingRepository;
         this.wsSender = wsSender.getSender(ObjectType.POST, Views.IdName.class);
     }
 
-    public PostPage findAll(Pageable pageable) {
-        Page<Post> page =postRepository.findAll(pageable);
+    public PostPage findForUser(Pageable pageable, User user) {
+        List<User> channels=userFollowingRepository.findByFollower(user).stream().map(UserFollowing::getChannel).collect(Collectors.toList());
+        channels.add(user);
+        Page<Post> page =postRepository.findByAuthorIn(channels,pageable);
         return new PostPage(page.getContent(),
                 pageable.getPageNumber(),
                 page.getTotalPages());

@@ -6,6 +6,7 @@
                          :key="post.id"
                          :post="post"
                          :editPost="editPost" />
+            <lazy-loader></lazy-loader>
         </v-col>
     </v-container>
 </template>
@@ -13,12 +14,14 @@
 <script>
     import PostRow from 'components/posts/PostRow.vue'
     import PostForm from 'components/posts/PostForm.vue'
+    import LazyLoader from 'components/LazyLoader.vue'
     import { mapGetters } from 'vuex'
     export default {
         name:'PostsList',
         components: {
             PostRow,
-            PostForm
+            PostForm,
+            LazyLoader
         },
         data() {
             return {

@@ -1,22 +1,8 @@
 <template>
     <v-card class="my-2">
         <v-card-text primary-title>
-            <div>
-                <v-avatar v-if="post.author&&post.author.imageUrl"
-                        size="60px">
-                  <v-img
-                    :src="post.author.imageUrl"
-                    :alt="post.author.username"
-                  ></v-img>
-                </v-avatar>
-
-                <v-avatar v-else
-                        size="36px"
-                        color="indigo">
-                  <v-icon icon="mdi-account-circle"></v-icon>
-                </v-avatar>
-                <span class="pl-3">{{authorName}}</span>
-            </div>
+            <user-link :user="post.author" size="48">
+            </user-link>
             <div class="pt-3">
                 {{ post.text }}
             </div>
@@ -36,14 +22,10 @@
 <script>
     import { mapActions } from 'vuex'
     import CommentList from 'components/comments/CommentList.vue'
+    import UserLink from 'components/UserLink.vue'
     export default {
         props: ['post', 'editPost'],
-        components:{CommentList},
-        computed:{
-            authorName() {
-                return this.post.author ? this.post.author.name : 'unknown'
-            }
-        },
+        components:{CommentList,UserLink},
         methods: {
             ...mapActions(['removePostAction']),
             edit() {

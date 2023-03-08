@@ -1,14 +1,16 @@
 package com.theinfinity.srpingbootinstagram.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -18,7 +20,8 @@ import java.time.LocalDateTime;
         @UniqueConstraint(columnNames = "phoneNumber")
 })
 @Data
-public class User {
+@EqualsAndHashCode(of = { "id" })
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonView(Views.Id.class)
@@ -28,7 +31,6 @@ public class User {
     private String username;
 
     @Email
-    @JsonView(Views.FullProfile.class)
     private String email;
 
     @JsonView(Views.IdName.class)
@@ -52,8 +54,6 @@ public class User {
     @JsonView(Views.FullProfile.class)
     private LocalDateTime lastVisit;
 
-
-    @JsonView(Views.FullProfile.class)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -65,10 +65,31 @@ public class User {
 
     private String providerId;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "username='" + username + '\'' +
-                '}';
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "user_followings",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id")
+    )
+    @JsonView(Views.FullProfile.class)
+    @JsonIdentityReference
+    @JsonIdentityInfo(
+            property = "id",
+            generator = ObjectIdGenerators.PropertyGenerator.class
+    )
+    private Set<User> followings=new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_followings",
+            joinColumns = @JoinColumn(name = "channel_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id")
+    )
+    @JsonView(Views.FullProfile.class)
+    @JsonIdentityReference
+    @JsonIdentityInfo(
+            property = "id",
+            generator = ObjectIdGenerators.PropertyGenerator.class
+    )
+    private Set<User> followers=new HashSet<>();
 }

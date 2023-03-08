@@ -1,30 +1,17 @@
 <template>
   <v-list-item>
-      <v-row align="start">
-        <v-col>
+      <v-row justify="start">
+        <v-col cols="1">
         <v-list-item-avatar>
-            <v-avatar v-if="comment.author&&comment.author.imageUrl"
-                    size="35px">
-              <v-img
-                :src="comment.author.imageUrl"
-                :alt="comment.author.username"
-              ></v-img>
-            </v-avatar>
-
-            <v-avatar v-else
-                    size="36px"
-                    color="indigo">
-              <v-icon icon="mdi-account-circle"></v-icon>
-            </v-avatar>
+            <user-link :user="comment.author" size=36>
+            </user-link>
         </v-list-item-avatar>
         </v-col>
-        <v-col>
+        <v-col >
         <v-list-item-content>
-            <v-list-item-title>{{comment.text}}</v-list-item-title>
+            <v-list-item-title><b>{{comment.author.username}}</b>  {{comment.text}}</v-list-item-title>
         </v-list-item-content>
-        </v-col>
-      </v-row>
-    <v-list-item-action>
+        <v-list-item-action>
         <v-btn @click="del" small class="button" variant="plain">
             Ответить
         </v-btn>
@@ -32,6 +19,8 @@
             Удалить
         </v-btn>
     </v-list-item-action>
+        </v-col>
+      </v-row>
   </v-list-item>
 </template>
 

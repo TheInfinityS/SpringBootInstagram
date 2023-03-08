@@ -2,7 +2,7 @@ package com.theinfinity.srpingbootinstagram.service;
 
 import com.theinfinity.srpingbootinstagram.dto.EventType;
 import com.theinfinity.srpingbootinstagram.dto.ObjectType;
-import com.theinfinity.srpingbootinstagram.entity.Comment;
+import com.theinfinity.srpingbootinstagram.dto.PostPage;
 import com.theinfinity.srpingbootinstagram.entity.Post;
 import com.theinfinity.srpingbootinstagram.entity.Views;
 import com.theinfinity.srpingbootinstagram.repository.PostRepository;
@@ -12,17 +12,16 @@ import com.theinfinity.srpingbootinstagram.util.WsSender;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.regex.Matcher;
 
 @Service
 public class PostService {
@@ -41,8 +40,11 @@ public class PostService {
         this.wsSender = wsSender.getSender(ObjectType.POST, Views.IdName.class);
     }
 
-    public List<Post> findAll() {
-        return postRepository.findAll();
+    public PostPage findAll(Pageable pageable) {
+        Page<Post> page =postRepository.findAll(pageable);
+        return new PostPage(page.getContent(),
+                pageable.getPageNumber(),
+                page.getTotalPages());
     }
 
     public Post getOne(Post post) {

@@ -10,7 +10,7 @@ app.use(VueRouter)
 const routes=[
     {path: '/',component: PostList},
     {path: '/auth',component: Auth},
-    {path: '/profile',component: Profile},
+    {path: '/user/:id?',component: Profile},
     {path: "/:catchAll(.*)",component: PostList},
 ]
 

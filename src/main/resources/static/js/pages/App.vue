@@ -11,7 +11,7 @@
                       <v-list-item prepend-icon="mdi-home" @click="showPosts" v-if="profile" :disabled="$route.path === '/'" title="Главная" variant="plain">
                       </v-list-item>
 
-                      <v-list-item v-if="profile" :disabled="$route.path === '/profile'" @click="showProfile" variant="plain">
+                      <v-list-item v-if="profile" :disabled="$route.path === '/user'" @click="showProfile" variant="plain">
                         <v-avatar v-if="profile&&profile.imageUrl"
                                 size="40px">
                           <v-img
@@ -50,7 +50,7 @@
                 this.$router.push('/')
             },
             showProfile() {
-                this.$router.push('/profile')
+                this.$router.push('/user')
             }
         },
         created() {

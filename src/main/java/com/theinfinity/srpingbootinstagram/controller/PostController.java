@@ -1,6 +1,7 @@
 package com.theinfinity.srpingbootinstagram.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.theinfinity.srpingbootinstagram.dto.PostPage;
 import com.theinfinity.srpingbootinstagram.entity.Post;
 import com.theinfinity.srpingbootinstagram.entity.Views;
 import com.theinfinity.srpingbootinstagram.repository.PostRepository;
@@ -9,14 +10,17 @@ import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
 import com.theinfinity.srpingbootinstagram.service.PostService;
 import com.theinfinity.srpingbootinstagram.util.WsSender;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/post")
 public class PostController {
+    public static final int  POST_PER_PAGE=3;
     private final PostService postService;
 
     @Autowired
@@ -26,9 +30,10 @@ public class PostController {
 
 
     @GetMapping
-    @JsonView(Views.IdName.class)
-    public List<Post> list() {
-        return postService.findAll();
+    @JsonView(Views.FullPost.class)
+    public PostPage list(@PageableDefault(size = POST_PER_PAGE,sort = {"id"},direction = Sort.Direction.DESC) Pageable pageable)
+    {
+        return postService.findAll(pageable);
     }
 
     @GetMapping("{id}")

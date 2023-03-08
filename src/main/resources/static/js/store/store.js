@@ -5,7 +5,8 @@ export default createStore({
   state () {
     return {
         posts,
-        profile: frontendData.profile
+        profile,
+        ...frontendData
     }
   },
   getters: {
@@ -20,7 +21,6 @@ export default createStore({
     },
     updatePostMutation(state, post){
         const updateIndex= state.posts.findIndex(item=>item.id===post.id)
-        post.comments=posts[updateIndex].comments
         state.posts=[
             ...state.posts.slice(0,updateIndex),
             post,
@@ -73,6 +73,21 @@ export default createStore({
              ]
          }
      },
+     addPostPageMutation(state,posts){
+        const targetPosts=state.posts
+            .concat(posts)
+            .reduce((res,val)=>{
+                res[val.id]=val
+                return res
+            }, {})
+        state.posts=Object.values(targetPosts)
+     },
+     updateTotalPagesMutation(state,totalPages){
+        state.totalPages=totalPages
+     },
+     updateCurrentPageMutation(state,currentPage){
+        state.currentPage=currentPage
+     }
   },
   actions: {
     async addPostAction({commit,state}, post){
@@ -125,6 +140,15 @@ export default createStore({
         if (result.ok) {
             commit('removeCommentMutation', comment)
         }
+    },
+    async loadPageAction({commit,state}){
+        const result=await fetch('/post?'+ new URLSearchParams({
+                                                page: state.currentPage+1
+                                            }),{method: 'GET'})
+        const data=await result.json()
+        commit('addPostPageMutation',data.posts)
+        commit('updateTotalPagesMutation',data.totalPages)
+        commit('updateCurrentPageMutation',Math.min(data.currentPage,data.totalPages-1))
     }
   }
 })

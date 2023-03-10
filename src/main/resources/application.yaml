@@ -34,12 +34,6 @@ spring:
               - openid
               - email
               - profile
-          github:
-            clientId: 2372ee7edbccf2fd49e0
-            clientSecret: ${githubClientSecret}
-            scope:
-              - email
-              - user
   servlet:
     multipart:
       max-file-size: 10MB

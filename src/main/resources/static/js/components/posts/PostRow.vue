@@ -8,8 +8,8 @@
             </div>
         </v-card-text>
         <v-card-actions>
-            <v-btn value="Edit" @click="edit" small flat round>Edit</v-btn>
-            <v-btn icon @click="del" small>
+            <v-btn v-if="isMyPost" value="Edit" @click="edit" small flat round>Edit</v-btn>
+            <v-btn v-if="isMyPost" icon @click="del" small>
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
         </v-card-actions>
@@ -26,6 +26,13 @@
     export default {
         props: ['post', 'editPost'],
         components:{CommentList,UserLink},
+        computed:{
+            isMyPost(){
+                console.log(this.post.author.id)
+                console.log(this.$store.state.profile.id)
+                return this.post.author.id === this.$store.state.profile.id
+            }
+        },
         methods: {
             ...mapActions(['removePostAction']),
             edit() {

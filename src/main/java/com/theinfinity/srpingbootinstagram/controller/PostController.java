@@ -43,12 +43,13 @@ public class PostController {
     }
 
     @GetMapping("{id}")
-    @JsonView({Views.FullPost.class})
+    @JsonView(Views.FullComment.class)
     public Post getOne(@PathVariable("id") Post post) {
         return postService.getOne(post);
     }
 
     @PostMapping
+    @JsonView(Views.FullPost.class)
     public Post create(
             @RequestBody Post post,
             @CurrentUser UserPrincipal userPrincipal
@@ -58,6 +59,7 @@ public class PostController {
     }
 
     @PutMapping("{id}")
+    @JsonView(Views.FullPost.class)
     public Post update(
             @PathVariable("id") Post postFromDb,
             @RequestBody Post post,

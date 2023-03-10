@@ -18,7 +18,7 @@ const vuetify = createVuetify({
   directives,
 })
 
-if(frontendData.profile){
+if(profile){
     connect()
 }
 const app = createApp(App)

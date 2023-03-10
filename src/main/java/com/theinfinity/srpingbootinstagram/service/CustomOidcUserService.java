@@ -49,7 +49,8 @@ public class CustomOidcUserService extends OidcUserService {
             throw new OidcAuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<User> userOptional = userRepository.findByUsername(oidcUserInfo.getPreferredUsername());
+//        Optional<User> userOptional = userRepository.findByUsername(oidcUserInfo.getPreferredUsername());
+        Optional<User> userOptional=userRepository.findByEmail(oidcUser.getEmail());
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();

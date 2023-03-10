@@ -44,11 +44,11 @@ public class PostService {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.userFollowingRepository = userFollowingRepository;
-        this.wsSender = wsSender.getSender(ObjectType.POST, Views.IdName.class);
+        this.wsSender = wsSender.getSender(ObjectType.POST, Views.FullPost.class);
     }
 
     public PostPage findForUser(Pageable pageable, User user) {
-        List<User> channels=userFollowingRepository.findByFollower(user).stream().map(UserFollowing::getChannel).collect(Collectors.toList());
+        List<User> channels=userFollowingRepository.findByFollower(user).stream().filter(UserFollowing::isActive).map(UserFollowing::getChannel).collect(Collectors.toList());
         channels.add(user);
         Page<Post> page =postRepository.findByAuthorIn(channels,pageable);
         return new PostPage(page.getContent(),

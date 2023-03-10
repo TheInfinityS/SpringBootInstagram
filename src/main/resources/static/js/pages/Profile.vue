@@ -19,8 +19,15 @@
                             <v-sheet >{{profile.locale}}</v-sheet >
                             <v-sheet >{{profile.gender}}</v-sheet >
                             <v-sheet >{{profile.lastVisit}}</v-sheet >
-                            <v-sheet >{{profile.followings&&profile.followings.length}} following</v-sheet >
-                            <v-sheet >{{profile.followers&&profile.followers.length}} followers</v-sheet >
+                            <v-sheet >
+                                {{profile.followings&&profile.followings.length}} following
+                            </v-sheet >
+                            <router-link v-if="isMyProfile" :to="'/following/${profile.id}'">
+                                {{profile.followers&&profile.followers.length}} followers
+                            </router-link>
+                            <v-sheet v-else>
+                                {{profile.followers&&profile.followers.length}} followers
+                            </v-sheet >
                         </v-col>
                     </v-card>
                 </v-row>

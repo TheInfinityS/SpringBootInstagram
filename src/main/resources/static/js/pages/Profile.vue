@@ -1,44 +1,65 @@
 <template>
     <v-container>
-        <v-row justify="space-around">
+        <v-row justify="space-around"  class="ac">
             <v-col>
                 <v-row>
-                    <v-card class="title mb-3">User profile</v-card>
-                </v-row>
-                <v-row>
-                    <v-card class="px-1">
-                        <v-img
-                            :src="profile.imageUrl"
-                            cover
-                            width="125"
-                            ></v-img>
-                    </v-card>
-                    <v-card class="px-1">
+                    <div class="px-1 aprfl">
+                        <v-avatar size="150">
+                            <v-img
+                                :src="profile.imageUrl"
+                                cover
+                                ></v-img>
+                        </v-avatar>
+                    </div>
+                    <div class="px-1 infprfl">
                         <v-col>
-                            <v-sheet >{{profile.name}}</v-sheet >
-                            <v-sheet >{{profile.locale}}</v-sheet >
-                            <v-sheet >{{profile.gender}}</v-sheet >
-                            <v-sheet >{{profile.lastVisit}}</v-sheet >
-                            <v-sheet >
-                                {{profile.followings&&profile.followings.length}} following
-                            </v-sheet >
-                            <router-link v-if="isMyProfile" :to="'/following/${profile.id}'">
-                                {{profile.followers&&profile.followers.length}} followers
-                            </router-link>
-                            <v-sheet v-else>
-                                {{profile.followers&&profile.followers.length}} followers
-                            </v-sheet >
+                            <v-row justify="start">
+                                <v-col cols="2">
+                                    <v-sheet class="text-h5">{{profile.username}}</v-sheet >
+                                </v-col>
+                                <v-col>
+                                    <v-btn
+                                        v-if="!isMyProfile"
+                                        @click="changeFollowing"
+                                    >
+                                        {{isIFollower ? 'Unfollow':'Follow'}}
+                                    </v-btn>
+                                    <v-btn append-icon="mdi-cog" variant="tonal" v-else>Edit profile</v-btn>
+                                </v-col>
+                            </v-row>
+                            <v-row justify="start">
+                                <v-col cols="3">
+                                    <v-sheet class="text-white text-decoration-none ml-3">{{userPosts.length}} posts</v-sheet>
+                                </v-col>
+                                <v-col>
+                                    <router-link v-if="isMyProfile" :to="'/follower/${profile.id}'" class="text-white text-decoration-none ml-3">
+                                        {{profile.followers&&profile.followers.length}} followers
+                                    </router-link>
+                                    <v-sheet v-else>
+                                        {{profile.followers&&profile.followers.length}} followers
+                                    </v-sheet >
+                                </v-col>
+                                <v-col>
+                                    <router-link v-if="isMyProfile" :to="'/following/${profile.id}'" class="text-white text-decoration-none ml-3">
+                                        {{profile.followings&&profile.followings.length}} following
+                                    </router-link>
+                                    <v-sheet v-else>
+                                        {{profile.followings&&profile.followings.length}} following
+                                    </v-sheet >
+                                </v-col>
+                            </v-row>
+                            <v-row justify="start">
+                                <v-col cols="1">
+                                    <v-sheet>{{profile.fullName}}</v-sheet >
+                                </v-col>
+                            </v-row>
                         </v-col>
-                    </v-card>
+                    </div>
                 </v-row>
-                <v-btn
-                    v-if="!isMyProfile"
-                    @click="changeFollowing"
-                >
-                    {{isIFollower ? 'Unfollow':'Follow'}}
-                </v-btn>
             </v-col>
         </v-row>
+        <v-divider class="mx-4 mb-1"></v-divider>
+        <div>Ok</div>
     </v-container>
 </template>
 
@@ -47,7 +68,8 @@
         name: 'Profile',
         data(){
             return{
-                profile:{}
+                profile:{},
+                userPosts:[]
             }
         },
         computed:{
@@ -76,10 +98,13 @@
                 const data = await fetch('/profile/'+id,{method: 'GET'})
                 this.profile = await data.json()
 
+                const response= await fetch('/post/user/'+id,{method: 'GET'})
+                this.userPosts=await response.json()
+
                 this.$forceUpdate()
             }
         },
-        beforeMount(){
+        async beforeMount(){
             this.updateProfile()
         }
     }
@@ -92,5 +117,16 @@
     }
     .v-image__image{
      background-size:100% 100%;
+    }
+    .aprfl{
+        margin-right: 30px;
+        flex-grow: 1;
+        flex-basis: 0;
+    }
+    .infprfl{
+        flex-grow: 2;
+    }
+    .ac{
+        margin-bottom: 44px !important;
     }
 </style>

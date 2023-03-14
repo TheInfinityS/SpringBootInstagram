@@ -9,7 +9,12 @@
         </v-col>
         <v-col >
         <v-list-item-content>
-            <v-list-item-title>{{comment.text}}</v-list-item-title>
+            <v-list-item-title>
+                <router-link :to="`/user/${comment.author.id}`">
+                    <strong v-html="comment.author.username" class="text-white text-decoration-none ml-3"></strong>
+                </router-link>
+                {{comment.text}}
+            </v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
         <v-btn @click="del" small class="button" variant="plain">
@@ -33,8 +38,6 @@
         props: ['comment'],
         computed:{
             isMyComment(){
-                console.log(this.comment.author.id === this.$store.state.profile.id)
-                console.log(this.comment.author.id === this.$store.state.profile.id)
                 return (this.comment.author.id === this.$store.state.profile.id) || (this.comment.author.id === this.$store.state.profile.id)
             }
         },

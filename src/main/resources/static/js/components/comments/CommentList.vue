@@ -17,7 +17,7 @@
       </template>
 
 
-      <comment-form :post-id="postId"></comment-form>
+      <comment-form :post-id="postId"  color="black"></comment-form>
     </v-list>
 </template>
 

@@ -56,6 +56,11 @@ public class PostService {
                 page.getTotalPages());
     }
 
+    public List<Post> findByUser(User user) {
+        List<Post> posts=postRepository.findByAuthor(user);
+        return posts;
+    }
+
     public Post getOne(Post post) {
         return post;
     }
@@ -92,5 +97,6 @@ public class PostService {
         postRepository.delete(post);
         wsSender.accept(EventType.REMOVE,post);
     }
+
 
 }

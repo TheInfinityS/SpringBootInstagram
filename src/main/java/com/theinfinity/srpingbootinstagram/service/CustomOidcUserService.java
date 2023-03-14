@@ -79,6 +79,7 @@ public class CustomOidcUserService extends OidcUserService {
         user.setEmailVerified(oidcUserInfo.getEmailVerified());
         user.setLocale(oidcUserInfo.getLocale());
         user.setRole(Role.USER);
+        user.setIsPrivate(false);
         return userRepository.save(user);
     }
 

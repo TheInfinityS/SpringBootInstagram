@@ -6,12 +6,15 @@
                     permanent
                     theme="dark"
                     color="black"
+                    class="nvlist"
+                    height="100"
+                    cover
                   >
                     <v-list nav>
-                      <v-list-item prepend-icon="mdi-home" @click="showPosts" v-if="profile" :disabled="$route.path === '/'" title="Главная" variant="plain">
+                      <v-list-item prepend-icon="mdi-home" @click="showPosts" v-if="profile" :disabled="$route.path === '/'" title="Главная" variant="text">
                       </v-list-item>
 
-                      <v-list-item v-if="profile" :disabled="$route.path === '/user'" @click="showProfile" variant="plain">
+                      <v-list-item v-if="profile" :disabled="$route.path === '/user'" @click="showProfile" variant="text">
                         <v-avatar v-if="profile&&profile.imageUrl"
                                 size="40px">
                           <v-img
@@ -21,13 +24,13 @@
                         Профиль
                       </v-list-item>
 
-                      <v-list-item prepend-icon="mdi-exit-to-app" value="clockin" v-if="profile" href="/logout" title="Выйти" variant="plain">
+                      <v-list-item class="pa-2" prepend-icon="mdi-exit-to-app" value="clockin" v-if="profile" href="/logout" title="Выйти" variant="text">
                       </v-list-item>
 
                     </v-list>
                   </v-navigation-drawer>
                 <v-main>
-                    <router-view></router-view>
+                    <router-view class="inst"></router-view>
                 </v-main>
             </v-layout>
         </v-card>
@@ -91,4 +94,18 @@
 </script>
 
 <style>
+.inst{
+    padding: 24px 20px 0px !important;
+    margin: 0px auto 30px !important;
+    max-width: 935px !important;
+    width: calc(100% - 40px) !important;
+    box-sizing: content-box;
+}
+.nvlist{
+    width: 335px !important;
+    height:100vh !important;
+    padding-bottom: 20px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box;
+}
 </style>

@@ -30,4 +30,8 @@ public class UserFollowingService {
         following.setActive(!following.isActive());
         return userFollowingRepository.save(following);
     }
+
+    public List<UserFollowing> getFollowing(User follower) {
+        return userFollowingRepository.findByFollower(follower);
+    }
 }

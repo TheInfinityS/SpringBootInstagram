@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row variant="outlined">
         <v-text-field
             label="Add comment"
             placeholder="Write something"

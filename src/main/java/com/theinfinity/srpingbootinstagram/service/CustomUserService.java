@@ -21,11 +21,24 @@ public class CustomUserService {
 
     public User changeFollowing(User channel, UserPrincipal follower) {
         User uFollower=userRepository.findByUsername(follower.getUsername()).get();
+        return changeFollowingAndFollower(channel,uFollower);
+    }
+
+    public User changeFollower(UserPrincipal channel, User follower) {
+        User uChannel=userRepository.findByUsername(channel.getUsername()).get();
+        return changeFollowingAndFollower(uChannel,follower);
+    }
+
+    public User changeFollowingAndFollower(User channel,User follower){
         List<UserFollowing> followings=channel.getFollowers().stream().filter(following->
-                        following.getFollower().equals(uFollower))
+                        following.getFollower().equals(follower))
                 .collect(Collectors.toList());
         if(followings.isEmpty()){
-            UserFollowing userFollowing = new UserFollowing(channel,uFollower);
+            UserFollowing userFollowing = new UserFollowing(channel,follower);
+            if(channel.getIsPrivate()){
+                userFollowing.setActive(false);
+            }
+            else userFollowing.setActive(true);
             channel.getFollowers().add(userFollowing);
         }
         else {

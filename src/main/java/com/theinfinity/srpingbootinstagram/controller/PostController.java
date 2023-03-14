@@ -18,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -48,6 +49,7 @@ public class PostController {
         return postService.getOne(post);
     }
 
+
     @PostMapping
     @JsonView(Views.FullPost.class)
     public Post create(
@@ -71,5 +73,11 @@ public class PostController {
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") Post post) {
         postService.delete(post);
+    }
+
+    @GetMapping("user/{id}")
+    @JsonView(Views.FullPost.class)
+    public List<Post> getPostsByAuthor(@PathVariable("id") User user){
+        return postService.findByUser(user);
     }
 }

@@ -82,4 +82,7 @@ public class User implements Serializable {
             cascade =CascadeType.ALL
     )
     private Set<UserFollowing> followers=new HashSet<>();
+
+    @JsonView(Views.IdName.class)
+    private Boolean isPrivate;
 }

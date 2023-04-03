@@ -1,7 +1,6 @@
 package com.theinfinity.srpingbootinstagram.security.cookie;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
-import com.theinfinity.srpingbootinstagram.pojo.AuthenticationRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;

@@ -30,6 +30,7 @@ spring:
           google:
             clientId: 362934420937-9idtptlgvi1qnfhj6m4ugsndl77lolr8.apps.googleusercontent.com
             clientSecret: ${googleClientSecret}
+            redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - openid
               - email
@@ -43,11 +44,15 @@ app:
     tokenSecret: 51655368566D597133743677397A24432646294A404E635266556A576E5A7234
     tokenExpirationMsec: 864000000
   cors:
-    allowedOrigins: http://localhost:3000
+    allowedOrigins: http://localhost:3000 # Comma separated list of allowed origins
   oauth2:
+    # After successfully authenticating with the OAuth2 Provider,
+    # we'll be generating an auth token for the user and sending the token to the
+    # redirectUri mentioned by the client in the /oauth2/authorize request.
+    # We're not using cookies because they won't work well in mobile clients.
     authorizedRedirectUris:
-      - http://localhost:3000/login/oauth2/redirect
-      - myandroidapp://login/oauth2/redirect
-      - myiosapp://login/oauth2/redirect
+      - http://localhost:3000/oauth2/redirect
+      - myandroidapp://oauth2/redirect
+      - myiosapp://oauth2/redirect
 upload:
   path: C:\Users\User\OneDrive\Изображения\instagram

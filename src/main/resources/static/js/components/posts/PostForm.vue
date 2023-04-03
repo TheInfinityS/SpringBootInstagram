@@ -1,10 +1,17 @@
 <template>
     <v-row>
-        <v-text-field
-            label="New post"
-            placeholder="Write something"
-            v-model="text"
-            @keyup.enter="save"/>
+        <v-col>
+            <v-text-field
+                label="New post"
+                placeholder="Write something"
+                v-model="text"
+                @keyup.enter="save"/>
+            <v-file-input
+                accept="image/*"
+                label="File input"
+                 @change="handleFileUpload( $event )"
+              ></v-file-input>
+        </v-col>
         <v-btn @click="save">
             Save
         </v-btn>
@@ -18,7 +25,8 @@
         data() {
             return {
                 text: null,
-                id: null
+                id: null,
+                file: null,
             }
         },
         watch: {
@@ -37,11 +45,15 @@
                 if (this.id) {
                     this.updatePostAction(post)
                 } else {
-                    this.addPostAction(post)
+                    this.addPostAction(post,file)
                 }
                 this.text = null
                 this.id = null
-            }
+            },
+            handleFileUpload(){
+                this.file = event.target.files[0];
+
+              }
         }
     }
 </script>

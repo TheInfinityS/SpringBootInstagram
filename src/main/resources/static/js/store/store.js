@@ -90,8 +90,9 @@ export default createStore({
      }
   },
   actions: {
-    async addPostAction({commit,state}, post){
-        console.log(post)
+    async addPostAction({commit,state}, post,file){
+        let formData = new FormData()
+        formData.append('file', this.file)
         const result=await fetch('/post', {
             method: 'POST',
             headers: {

@@ -7,10 +7,13 @@
                 v-model="text"
                 @keyup.enter="save"/>
             <v-file-input
-                accept="image/*"
-                label="File input"
-                 @change="handleFileUpload( $event )"
-              ></v-file-input>
+              ref="fileInput"
+              v-model="file"
+              show-size
+              label="File input"
+              @click:prepend="resetFileInput"
+              @change="handleFileUpload( $event )"
+            ></v-file-input>
         </v-col>
         <v-btn @click="save">
             Save
@@ -26,7 +29,7 @@
             return {
                 text: null,
                 id: null,
-                file: null,
+                file : null
             }
         },
         watch: {
@@ -45,15 +48,21 @@
                 if (this.id) {
                     this.updatePostAction(post)
                 } else {
-                    this.addPostAction(post,file)
+                    let formData = new FormData()
+                    formData.append('text',post.text)
+                    formData.append('file', this.file)
+                    this.addPostAction(formData);
                 }
                 this.text = null
                 this.id = null
+                this.file=null
             },
-            handleFileUpload(){
-                this.file = event.target.files[0];
-
-              }
+            handleFileUpload( e ){
+                this.file = e.target.files[0];
+            },
+            resetFileInput() {
+              this.$refs.fileInput.reset();
+            }
         }
     }
 </script>

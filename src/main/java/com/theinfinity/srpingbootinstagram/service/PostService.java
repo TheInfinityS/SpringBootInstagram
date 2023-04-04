@@ -68,13 +68,14 @@ public class PostService {
     public Post create(Post post, UserPrincipal user, MultipartFile file) throws IOException {
         post.setAuthor(userRepository.findByUsername(user.getUsername()).orElse(userRepository.findByUsername("Sam").get()));
         File uploadDir=new File(uploadPath);
+        System.out.println(uploadDir.exists());
         if(!uploadDir.exists())
             uploadDir.mkdir();
         if(file!=null) {
             String uuidFile = UUID.randomUUID().toString();
             String fileName = uuidFile + "." + file.getOriginalFilename();
             System.out.println(fileName);
-            file.transferTo(new File(fileName));
+            file.transferTo(new File(uploadPath+"/"+fileName));
             post.setImageUrl(fileName);
         }
         post.setCreationTime(LocalDateTime.now());

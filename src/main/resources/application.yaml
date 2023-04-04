@@ -55,4 +55,4 @@ app:
       - myandroidapp://oauth2/redirect
       - myiosapp://oauth2/redirect
 upload:
-  path: C:\Users\User\OneDrive\Изображения\instagram
+  path: D:\instagram

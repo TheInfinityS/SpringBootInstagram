@@ -20,7 +20,7 @@
         </v-card-item>
         <v-img
           cover
-          src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          src="D:/instagram/${post.imageUrl}"
         ></v-img>
         <v-card-actions>
             <v-btn v-if="isMyPost" value="Edit" @click="edit" small flat round>Edit</v-btn>

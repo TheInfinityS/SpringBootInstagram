@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -50,14 +52,17 @@ public class PostController {
     }
 
 
-    @PostMapping
+    @PostMapping(headers = {"content-type=multipart/*"})
     @JsonView(Views.FullPost.class)
     public Post create(
-            @RequestBody Post post,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("text") String text,
             @CurrentUser UserPrincipal userPrincipal
-//            ,@RequestParam("file") MultipartFile file
     ) throws IOException {
-        return postService.create(post,userPrincipal,null);
+        Post post=new Post();
+        post.setText(text);
+        System.out.println(file);
+        return postService.create(post,userPrincipal,file);
     }
 
     @PutMapping("{id}")

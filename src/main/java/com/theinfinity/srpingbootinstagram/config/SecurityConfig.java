@@ -97,13 +97,14 @@ public class SecurityConfig {
                     });
                     httpSecurityOAuth2LoginConfigurer.redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/login/oauth2/code/*"));
 
-                    httpSecurityOAuth2LoginConfigurer.successHandler(oidcAuthenticationSuccessHandler);
-
-                    httpSecurityOAuth2LoginConfigurer.failureHandler(oidcAuthenticationFailureHandler);
+//                    httpSecurityOAuth2LoginConfigurer.successHandler(oidcAuthenticationSuccessHandler);
+//
+//                    httpSecurityOAuth2LoginConfigurer.failureHandler(oidcAuthenticationFailureHandler);
                 })
 //                .sessionManagement(httpSecuritySessionManagementConfigurer ->
 //                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        ;
 
         return http.build();
     }

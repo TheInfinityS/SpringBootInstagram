@@ -90,16 +90,13 @@ export default createStore({
      }
   },
   actions: {
-    async addPostAction({commit,state}, post,file){
-        let formData = new FormData()
-        formData.append('file', this.file)
+    async addPostAction({commit,state},formData){
+
         const result=await fetch('/post', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(post)})
+            body: formData})
         const data=await result.json()
+
         const index = state.posts.findIndex(item=>item.id === data.id)
         if(index!=null){
             commit('updatePostMutation', data)

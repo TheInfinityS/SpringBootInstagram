@@ -3,10 +3,7 @@ package com.theinfinity.srpingbootinstagram.service;
 import com.theinfinity.srpingbootinstagram.dto.EventType;
 import com.theinfinity.srpingbootinstagram.dto.ObjectType;
 import com.theinfinity.srpingbootinstagram.dto.PostPage;
-import com.theinfinity.srpingbootinstagram.entity.Post;
-import com.theinfinity.srpingbootinstagram.entity.User;
-import com.theinfinity.srpingbootinstagram.entity.UserFollowing;
-import com.theinfinity.srpingbootinstagram.entity.Views;
+import com.theinfinity.srpingbootinstagram.entity.*;
 import com.theinfinity.srpingbootinstagram.repository.PostRepository;
 import com.theinfinity.srpingbootinstagram.repository.UserFollowingRepository;
 import com.theinfinity.srpingbootinstagram.repository.UserRepository;
@@ -34,16 +31,19 @@ public class PostService {
     private final UserRepository userRepository;
     private final UserFollowingRepository userFollowingRepository;
 
+    private final LikeService likeService;
     private final BiConsumer<EventType,Post> wsSender;
+
 
     @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserRepository userRepository, UserFollowingRepository userFollowingRepository, WsSender wsSender) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, UserFollowingRepository userFollowingRepository, LikeService likeService, WsSender wsSender) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
         this.userFollowingRepository = userFollowingRepository;
+        this.likeService = likeService;
         this.wsSender = wsSender.getSender(ObjectType.POST, Views.FullPost.class);
     }
 
@@ -79,7 +79,6 @@ public class PostService {
             post.setImageUrl(fileName);
         }
         post.setCreationTime(LocalDateTime.now());
-        post.setLikes(0);
         Post updatedPost=postRepository.save(post);
         wsSender.accept(EventType.CREATE,updatedPost);
         return updatedPost;
@@ -100,4 +99,8 @@ public class PostService {
     }
 
 
+    public LikeContent like(Post post, UserPrincipal userPrincipal) {
+        User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
+        return likeService.like(Content.POST,post.getId(),user);
+    }
 }

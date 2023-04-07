@@ -20,7 +20,13 @@
         </v-card-item>
         <v-img
           cover
-          src="D:/instagram/${post.imageUrl}"
+          v-if="post.imageUrl"
+          :src="'/img/'+post.imageUrl"
+        ></v-img>
+        <v-img
+          cover
+          v-else
+          src="https://i.pinimg.com/564x/bb/da/79/bbda7964b7fd89889098074a5d915bf3.jpg"
         ></v-img>
         <v-card-actions>
             <v-btn v-if="isMyPost" value="Edit" @click="edit" small flat round>Edit</v-btn>
@@ -28,7 +34,7 @@
             <v-btn v-if="isMyPost" icon @click="del" small>
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn size="small"   icon="mdi-heart-outline"></v-btn>
+            <v-btn size="small" @click="like"   append-icon="mdi-heart-outline">Liked: {{post.likes.length}}</v-btn>
 
             <v-btn size="small"   icon="mdi-bookmark-outline"></v-btn>
 
@@ -58,8 +64,7 @@
         components:{CommentList,UserLink},
         computed:{
             isMyPost(){
-                console.log(this.post.author.id)
-                console.log(this.$store.state.profile.id)
+                console.log(this.post.imageUrl)
                 return this.post.author.id === this.$store.state.profile.id
             }
         },
@@ -70,6 +75,14 @@
             },
             del() {
                 this.removePostAction(this.post)
+            },
+            like(){
+                const data = fetch('/post/like/'+this.post.id,{
+                   method: 'POST',
+                   headers: {
+                                 'Content-Type': 'application/json;charset=utf-8'
+                               },
+                   body: JSON.stringify(this.post)})
             }
         }
     }

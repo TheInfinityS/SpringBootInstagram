@@ -30,10 +30,11 @@ public class MvcConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .maxAge(MAX_AGE_SECS);
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/**")
-                .addResourceLocations(uploadPath + "/");
+                .addResourceLocations( "file://" + uploadPath + "/");
     }
 
     @Bean

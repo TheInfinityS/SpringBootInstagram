@@ -11,7 +11,9 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -51,7 +53,8 @@ public class Post {
     private String imageUrl;
 
     @JsonView(Views.FullPost.class)
-    private Integer likes;
+    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL)
+    private Set<LikeContent> likes=new HashSet<>();
 
     public void setComments(List<Comment> comments) {
         this.comments.clear();

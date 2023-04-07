@@ -32,7 +32,6 @@ public class CommentService {
     public Comment create(Comment comment, UserPrincipal user) {
         comment.setAuthor(userRepository.findByUsername(user.getUsername()).get());
         comment.setCreationTime(LocalDateTime.now());
-        comment.setLikes(0);
         Comment commentFromDb=commentRepo.save(comment);
         wsSender.accept(EventType.CREATE,commentFromDb);
         return commentFromDb;

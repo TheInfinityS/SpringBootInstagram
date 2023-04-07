@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table
@@ -31,11 +33,12 @@ public class Comment {
     @JsonView(Views.IdName.class)
     private User author;
 
-    @JsonView(Views.FullComment.class)
-    private Integer likes;
-
     @Column(updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonView(Views.FullComment.class)
     private LocalDateTime creationTime;
+
+    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL)
+    @JsonView(Views.FullComment.class)
+    private Set<LikeContent> likes=new HashSet<>();
 }

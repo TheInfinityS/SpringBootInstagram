@@ -2,6 +2,7 @@ package com.theinfinity.srpingbootinstagram.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.theinfinity.srpingbootinstagram.dto.PostPage;
+import com.theinfinity.srpingbootinstagram.entity.LikeContent;
 import com.theinfinity.srpingbootinstagram.entity.Post;
 import com.theinfinity.srpingbootinstagram.entity.User;
 import com.theinfinity.srpingbootinstagram.entity.Views;
@@ -84,5 +85,14 @@ public class PostController {
     @JsonView(Views.FullPost.class)
     public List<Post> getPostsByAuthor(@PathVariable("id") User user){
         return postService.findByUser(user);
+    }
+
+    @PostMapping("like/{id}")
+    @JsonView(Views.FullPost.class)
+    public LikeContent like(
+            @PathVariable("id") Post post,
+            @CurrentUser UserPrincipal userPrincipal
+    ){
+        return postService.like(post,userPrincipal);
     }
 }

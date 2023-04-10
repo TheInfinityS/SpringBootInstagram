@@ -83,6 +83,7 @@
                                  'Content-Type': 'application/json;charset=utf-8'
                                },
                    body: JSON.stringify(this.post)})
+                   console.log(this.post.likes)
             }
         }
     }

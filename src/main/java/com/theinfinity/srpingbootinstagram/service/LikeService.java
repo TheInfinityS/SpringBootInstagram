@@ -7,6 +7,8 @@ import com.theinfinity.srpingbootinstagram.entity.User;
 import com.theinfinity.srpingbootinstagram.repository.LikeRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class LikeService {
     private final LikeRepository likeRepository;

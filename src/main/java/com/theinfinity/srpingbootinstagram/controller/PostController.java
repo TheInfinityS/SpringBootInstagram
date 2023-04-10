@@ -89,7 +89,7 @@ public class PostController {
 
     @PostMapping("like/{id}")
     @JsonView(Views.FullPost.class)
-    public LikeContent like(
+    public Post like(
             @PathVariable("id") Post post,
             @CurrentUser UserPrincipal userPrincipal
     ){

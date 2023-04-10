@@ -1,5 +1,8 @@
 package com.theinfinity.srpingbootinstagram.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,20 +13,24 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@EqualsAndHashCode(of = "id")
-@ToString(of = "id")
+@EqualsAndHashCode(of = { "content","contentid","user"})
+@ToString(of = { "content","contentid","user"})
 @NoArgsConstructor
 public class LikeContent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     @Enumerated(EnumType.STRING)
     private Content content;
+
+    @JsonView(Views.IdName.class)
     private Long contentid;
 
 
     @ManyToOne
+    @JsonView(Views.IdName.class)
     private User user;
 
     public LikeContent(Content content, Long contentid, User user) {

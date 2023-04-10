@@ -99,8 +99,19 @@ public class PostService {
     }
 
 
-    public LikeContent like(Post post, UserPrincipal userPrincipal) {
+    public Post like(Post post, UserPrincipal userPrincipal) {
         User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
-        return likeService.like(Content.POST,post.getId(),user);
+        List<LikeContent> likes=post.getLikes().stream().filter(likeContent ->likeContent.getUser().equals(user) ).collect(Collectors.toList());
+        System.out.println(likes);
+        if(likes.isEmpty()){
+            LikeContent like = new LikeContent(Content.POST,post.getId(),user);
+            post.getLikes().add(like);
+        }
+        else {
+            System.out.println("ok");
+            likes.forEach(post.getLikes()::remove);
+            System.out.println(post.getLikes());
+        }
+        return postRepository.save(post);
     }
 }

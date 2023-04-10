@@ -53,7 +53,7 @@ public class Post {
     private String imageUrl;
 
     @JsonView(Views.FullPost.class)
-    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<LikeContent> likes=new HashSet<>();
 
     public void setComments(List<Comment> comments) {

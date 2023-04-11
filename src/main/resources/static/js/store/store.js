@@ -27,6 +27,14 @@ export default createStore({
             ...state.posts.slice(updateIndex+1)
         ]
     },
+    likePostMutation(state,post){
+        const updateIndex= state.posts.findIndex(item=>item.id===post.id)
+        state.posts=[
+            ...state.posts.slice(0,updateIndex),
+            post,
+            ...state.posts.slice(updateIndex+1)
+        ]
+    },
     removePostMutation(state, post){
         const deletionIndex= state.posts.findIndex(item=>item.id===post.id)
         if(deletionIndex>-1){
@@ -49,6 +57,28 @@ export default createStore({
                     comments: [
                         ...post.comments,
                         comment
+                    ]
+                },
+                ...state.posts.slice(updateIndex + 1)
+            ]
+        }
+    },
+    likeCommentMutation(state, comment){
+        const updateIndex = state.posts.findIndex(item => item.id === comment.post.id)
+
+        const post = state.posts[updateIndex]
+        const commentIndex=post.comments.findIndex(item=>item.id===comment.id)
+        console.log(commentIndex)
+
+        if(!post.comments.find(it=>it.id===comment.id)){
+            state.posts = [
+                ...state.posts.slice(0, updateIndex),
+                {
+                    ...post,
+                    comments: [
+                        ...post.comments.slice(0,commentIndex),
+                        comment,
+                        ...post.comments.slice(commentIndex+1)
                     ]
                 },
                 ...state.posts.slice(updateIndex + 1)
@@ -147,6 +177,26 @@ export default createStore({
         commit('addPostPageMutation',data.posts)
         commit('updateTotalPagesMutation',data.totalPages)
         commit('updateCurrentPageMutation',Math.min(data.currentPage,data.totalPages-1))
+    },
+    async likePostAction({commit}, post){
+        const result = await fetch('/post/like/'+post.id,{
+           method: 'POST',
+           headers: {
+                         'Content-Type': 'application/json;charset=utf-8'
+                       },
+           body: JSON.stringify(post)})
+        const data=await result.json()
+        commit('likePostMutation', data)
+    },
+    async likeCommentAction({commit}, comment){
+        const result = await fetch('/comment/like/'+comment.id,{
+           method: 'POST',
+           headers: {
+                         'Content-Type': 'application/json;charset=utf-8'
+                       },
+           body: JSON.stringify(comment)})
+        const data=await result.json()
+        commit('likeCommentMutation', data)
     }
   }
 })

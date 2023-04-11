@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -113,5 +114,16 @@ public class PostService {
             System.out.println(post.getLikes());
         }
         return postRepository.save(post);
+    }
+
+    public List<Post> userLiked(UserPrincipal userPrincipal) {
+        User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
+        List<Post> posts=new ArrayList<>();
+        List<LikeContent> likes=likeService.userLiked(Content.POST,user);
+        for (LikeContent like:likes
+             ) {
+            posts.add(postRepository.findById(like.getContentid()).get());
+        }
+        return posts;
     }
 }

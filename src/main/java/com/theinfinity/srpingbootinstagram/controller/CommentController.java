@@ -2,6 +2,7 @@ package com.theinfinity.srpingbootinstagram.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.theinfinity.srpingbootinstagram.entity.Comment;
+import com.theinfinity.srpingbootinstagram.entity.Post;
 import com.theinfinity.srpingbootinstagram.entity.Views;
 import com.theinfinity.srpingbootinstagram.security.CurrentUser;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
@@ -32,5 +33,14 @@ public class CommentController {
     @JsonView(Views.FullComment.class)
     public void delete(@PathVariable("id") Comment comment){
         commentService.delete(comment);
+    }
+
+    @PostMapping("like/{id}")
+    @JsonView(Views.FullComment.class)
+    public Comment like(
+            @PathVariable("id") Comment comment,
+            @CurrentUser UserPrincipal userPrincipal
+    ){
+        return commentService.like(comment,userPrincipal);
     }
 }

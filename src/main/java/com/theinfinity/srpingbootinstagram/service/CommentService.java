@@ -2,8 +2,7 @@ package com.theinfinity.srpingbootinstagram.service;
 
 import com.theinfinity.srpingbootinstagram.dto.EventType;
 import com.theinfinity.srpingbootinstagram.dto.ObjectType;
-import com.theinfinity.srpingbootinstagram.entity.Comment;
-import com.theinfinity.srpingbootinstagram.entity.Views;
+import com.theinfinity.srpingbootinstagram.entity.*;
 import com.theinfinity.srpingbootinstagram.repository.CommentRepository;
 import com.theinfinity.srpingbootinstagram.repository.UserRepository;
 import com.theinfinity.srpingbootinstagram.security.UserPrincipal;
@@ -13,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -41,5 +42,21 @@ public class CommentService {
 
         commentRepo.delete(comment);
         wsSender.accept(EventType.REMOVE,comment);
+    }
+
+    public Comment like(Comment comment, UserPrincipal userPrincipal) {
+        User user=userRepository.findByUsername(userPrincipal.getUsername()).get();
+        List<LikeContent> likes=comment.getLikes().stream().filter(likeContent ->likeContent.getUser().equals(user) ).collect(Collectors.toList());
+        System.out.println(likes);
+        if(likes.isEmpty()){
+            LikeContent like = new LikeContent(Content.COMMENT,comment.getId(),user);
+            comment.getLikes().add(like);
+        }
+        else {
+            System.out.println("ok");
+            likes.forEach(comment.getLikes()::remove);
+            System.out.println(comment.getLikes());
+        }
+        return commentRepo.save(comment);
     }
 }

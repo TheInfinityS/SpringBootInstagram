@@ -23,6 +23,10 @@
         <v-btn v-if="isMyComment" @click="del" small class="button" variant="plain">
             Удалить
         </v-btn>
+        <v-btn size="small" @click="like" :color="buttonColor" variant="plain"> 
+                <v-icon>{{ isCommentLiked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+            </v-btn>
+            <v-btn size="small" @click="likers" variant="plain">{{comment.likes.length}}</v-btn>
     </v-list-item-action>
         </v-col>
       </v-row>
@@ -39,12 +43,23 @@
         computed:{
             isMyComment(){
                 return (this.comment.author.id === this.$store.state.profile.id) || (this.comment.author.id === this.$store.state.profile.id)
-            }
+            },
+            isPostLiked(){
+                return this.comment.likes.find(likes=>{
+                    return  likes.user.id === this.$store.state.profile.id
+                })
+            },
         },
         methods: {
-            ...mapActions(['removeCommentAction']),
+            ...mapActions(['removeCommentAction','likeCommentAction']),
             del() {
                 this.removeCommentAction(this.comment)
+            },
+            like(){
+                this.likeCommentAction(this.comment)
+            },
+            likers(){
+                this.comment.likes.forEach(element => console.log(element.user))
             }
         }
     }

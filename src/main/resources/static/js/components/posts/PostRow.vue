@@ -29,16 +29,18 @@
           src="https://i.pinimg.com/564x/bb/da/79/bbda7964b7fd89889098074a5d915bf3.jpg"
         ></v-img>
         <v-card-actions>
-            <v-btn v-if="isMyPost" value="Edit" @click="edit" small flat round>Edit</v-btn>
+            <v-btn v-if="isMyPost" value="Edit" @click="edit" small flat round variant="plain">Edit</v-btn>
 
-            <v-btn v-if="isMyPost" icon @click="del" small>
+            <v-btn v-if="isMyPost" icon @click="del" small variant="plain">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
-            <v-btn size="small" @click="like"   append-icon="mdi-heart-outline">Liked: {{post.likes.length}}</v-btn>
+            <v-btn size="small" :active="isPostLiked" @click="like" :color="buttonColor" variant="plain">
+                <v-icon>{{ isPostLiked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
+            </v-btn>
+            <v-btn size="small" @click="likers" variant="plain" active="isPostLiked">Liked: {{post.likes.length}}</v-btn>
+            <v-btn size="small" @click="savePost"   icon="mdi-bookmark-outline" variant="plain"></v-btn>
 
-            <v-btn size="small"   icon="mdi-bookmark-outline"></v-btn>
-
-            <v-btn size="small"  icon="mdi-comment-outline"></v-btn>
+            <v-btn size="small"  icon="mdi-comment-outline" variant="plain"></v-btn>
         </v-card-actions>
         <v-card-text primary-title>
             <div class="pt-3">
@@ -66,10 +68,18 @@
             isMyPost(){
                 console.log(this.post.imageUrl)
                 return this.post.author.id === this.$store.state.profile.id
+            },
+            isPostLiked(){
+                return this.post.likes.find(likes=>{
+                    return  likes.user.id === this.$store.state.profile.id
+                })
+            },
+            buttonColor() {
+              return this.isPostLiked ? 'red' : 'white'
             }
         },
         methods: {
-            ...mapActions(['removePostAction']),
+            ...mapActions(['removePostAction','likePostAction']),
             edit() {
                 this.editPost(this.post)
             },
@@ -77,13 +87,10 @@
                 this.removePostAction(this.post)
             },
             like(){
-                const data = fetch('/post/like/'+this.post.id,{
-                   method: 'POST',
-                   headers: {
-                                 'Content-Type': 'application/json;charset=utf-8'
-                               },
-                   body: JSON.stringify(this.post)})
-                   console.log(this.post.likes)
+                this.likePostAction(this.post)
+            },
+            likers(){
+                this.post.likes.forEach(element => console.log(element.user))
             }
         }
     }

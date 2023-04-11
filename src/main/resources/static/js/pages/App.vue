@@ -23,6 +23,8 @@
                         </v-avatar>
                         Профиль
                       </v-list-item>
+                      <v-list-item class="pa-2" v-if="profile" title="Liked" variant="text" @click="liked">
+                        </v-list-item>
 
                       <v-list-item class="pa-2" prepend-icon="mdi-exit-to-app" value="clockin" v-if="profile" href="/logout" title="Выйти" variant="text">
                       </v-list-item>
@@ -54,6 +56,11 @@
             },
             showProfile() {
                 this.$router.push('/user')
+            },
+            async liked(){
+                const response= await fetch('/post/user/liked',{method: 'GET'})
+                const userPosts=await response.json()
+                console.log(userPosts)
             }
         },
         created() {

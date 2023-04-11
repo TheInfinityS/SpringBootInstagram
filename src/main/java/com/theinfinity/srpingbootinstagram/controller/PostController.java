@@ -95,4 +95,8 @@ public class PostController {
     ){
         return postService.like(post,userPrincipal);
     }
+    @GetMapping("user/liked")
+    public List<Post> userLiked( @CurrentUser UserPrincipal userPrincipal){
+        return postService.userLiked(userPrincipal);
+    }
 }

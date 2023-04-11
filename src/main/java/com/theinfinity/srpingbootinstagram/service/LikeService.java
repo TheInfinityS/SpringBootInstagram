@@ -20,4 +20,8 @@ public class LikeService {
     public LikeContent like(Content content, Long contentId, User user) {
         return likeRepository.save(new LikeContent(content,contentId,user));
     }
+
+    public List<LikeContent> userLiked(Content content, User user) {
+        return likeRepository.findByContentAndUser(content,user);
+    }
 }

@@ -1,5 +1,6 @@
 package com.theinfinity.srpingbootinstagram.repository;
 
+import com.theinfinity.srpingbootinstagram.entity.Content;
 import com.theinfinity.srpingbootinstagram.entity.LikeContent;
 import com.theinfinity.srpingbootinstagram.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface LikeRepository extends JpaRepository<LikeContent,Long> {
 
     List<LikeContent> findByUserIn(List<User> user);
     List<LikeContent> findByContentid(Long id);
+
+    List<LikeContent> findByContentAndUser(Content content, User user);
 }

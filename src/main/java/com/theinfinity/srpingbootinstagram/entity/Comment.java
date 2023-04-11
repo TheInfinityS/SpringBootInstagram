@@ -25,7 +25,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "post_id")
-    @JsonView(Views.FullComment.class)
+    @JsonView(Views.FullPost.class)
     private Post post;
 
     @ManyToOne
@@ -38,7 +38,7 @@ public class Comment {
     @JsonView(Views.FullComment.class)
     private LocalDateTime creationTime;
 
-    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL)
-    @JsonView(Views.FullComment.class)
+    @OneToMany(mappedBy = "contentid", cascade = CascadeType.ALL,orphanRemoval = true)
+    @JsonView(Views.FullPost.class)
     private Set<LikeContent> likes=new HashSet<>();
 }

@@ -1,5 +1,6 @@
 package com.theinfinity.srpingbootinstagram.config;
 
+import com.theinfinity.srpingbootinstagram.security.RestAccessDeniedHandler;
 import com.theinfinity.srpingbootinstagram.security.RestAuthenticationEntryPoint;
 import com.theinfinity.srpingbootinstagram.security.cookie.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.theinfinity.srpingbootinstagram.security.handler.OidcAuthenticationFailureHandler;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -56,6 +58,9 @@ public class SecurityConfig {
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    @Autowired
+    private RestAccessDeniedHandler restAccessDeniedHandler;
+
     @Bean
     public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
         return new HttpCookieOAuth2AuthorizationRequestRepository();
@@ -79,11 +84,14 @@ public class SecurityConfig {
         http
                 .cors().and()
                 .csrf().disable()
-//                .formLogin().disable()
-//                .httpBasic().disable()
-//                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .formLogin().disable()
+                .httpBasic().disable()
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+                    httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(restAuthenticationEntryPoint);
+                    httpSecurityExceptionHandlingConfigurer.accessDeniedHandler(restAccessDeniedHandler);
+                })
                 .authorizeRequests(request->{
-                    request.requestMatchers("/", "/login**", "/js/**", "/error**","/signup").permitAll();
+                    request.requestMatchers("/", "/auth/**", "/js/**", "/error**").permitAll();
                     request.anyRequest().authenticated();
                 })
                 .oauth2Login(httpSecurityOAuth2LoginConfigurer -> {
@@ -92,7 +100,7 @@ public class SecurityConfig {
                             userInfoEndpointConfig.oidcUserService(oidcUserService));
 
                     httpSecurityOAuth2LoginConfigurer.authorizationEndpoint(authorizationEndpointConfig ->{
-                            authorizationEndpointConfig.authorizationRequestRepository(cookieAuthorizationRequestRepository());
+//                            authorizationEndpointConfig.authorizationRequestRepository(cookieAuthorizationRequestRepository());
                             authorizationEndpointConfig.baseUri("/oauth2/authorization");
                     });
                     httpSecurityOAuth2LoginConfigurer.redirectionEndpoint(redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/login/oauth2/code/*"));

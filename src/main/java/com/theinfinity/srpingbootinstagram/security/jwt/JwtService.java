@@ -17,8 +17,6 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final String SECRET_KEY="51655368566D597133743677397A24432646294A404E635266556A576E5A7234";
-
     private AppProperties appProperties;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtService.class);

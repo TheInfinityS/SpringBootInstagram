@@ -10,9 +10,8 @@ public class OidcUserInfoFactory {
     public static OidcUserInfo getOidcUserInfo(String registrationId, Map<String, Object> claims) {
         if(registrationId.equalsIgnoreCase(AuthProvider.google.toString())) {
             return new GoogleOIdcUserInfo(claims);
-        } else if (registrationId.equalsIgnoreCase(AuthProvider.github.toString())) {
-            return new GithubOidcUserInfo(claims);
-        } else {
+        }
+        else {
             throw new OidcAuthenticationProcessingException("Sorry! Login with " + registrationId + " is not supported yet.");
         }
     }

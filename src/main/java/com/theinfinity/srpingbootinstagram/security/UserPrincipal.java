@@ -2,6 +2,8 @@ package com.theinfinity.srpingbootinstagram.security;
 
 import com.theinfinity.srpingbootinstagram.entity.Role;
 import com.theinfinity.srpingbootinstagram.entity.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
